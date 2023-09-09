@@ -1,4 +1,5 @@
 import { type TeamNames } from "./staffDb";
+import * as fs from "fs";
 
 export class RedemptionDbEntry {
     teamName: TeamNames;
@@ -12,7 +13,7 @@ export class RedemptionDbEntry {
 }
 
 export interface IRedemptionDb {
-    load: () => IRedemptionDb;
+    loadFrom: (filePath: string) => void;
     teamExistsInDb: (identifier: TeamNames) => boolean;
     getEntryByTeam: (identifier: string) => RedemptionDbEntry | undefined;
     addEntry: (entry: RedemptionDbEntry) => void;
@@ -21,9 +22,37 @@ export interface IRedemptionDb {
 
 export class RedemptionDb implements IRedemptionDb {
     database: RedemptionDbEntry[];
+    filePath: string;
 
-    load(): IRedemptionDb {
-        // TODO: read some file for now
+    loadFrom(filePath: string): void {
+        this.filePath = filePath;
+        let fileData: string = "";
+        try {
+            fileData = fs.readFileSync(this.filePath, "utf-8");
+        } catch (err) {
+            console.log("Something went wrong while reading from file:" + err);
+        }
+        // TODO: implement
+    }
+
+    _csvToArray(csvData: string): RedemptionDbEntry[] {
+        const data: string[] = csvData.split("\n");
+        const arr: RedemptionDbEntry[] = [];
+        for (const entry of data) {
+            const fields: string[] = entry.split(",");
+            for (const field of fields) {
+                const teamName = field[0] as TeamNames;
+                const redeemedBy = field[1];
+                const redeemedAt = Number.parseInt(field[2]);
+                const dbEntry: RedemptionDbEntry = {
+                    teamName,
+                    redeemedBy,
+                    redeemedAt,
+                };
+                arr.push(dbEntry);
+            }
+        }
+        return arr;
     }
 
     getEntryByTeam(identifier: string): RedemptionDbEntry | undefined {
@@ -39,10 +68,21 @@ export class RedemptionDb implements IRedemptionDb {
     }
 
     close(): void {
-        // TODO: do some writing to file for now
+        const csvData: string = this._databaseToString();
+        try {
+            fs.writeFileSync(this.filePath, csvData, "utf-8");
+        } catch (err) {
+            console.log("Something went wrong while saving to file:" + err);
+        }
     }
 
-    constructor() {
-        // TODO: build constructor
+    _databaseToString(): string {
+        let result: string = "teamName,redeemedBy,redeemedAt\n";
+        for (const entry of this.database) {
+            result += entry.teamName + ",";
+            result += entry.redeemedBy + ",";
+            result += entry.redeemedAt + "\n";
+        }
+        return result;
     }
 }

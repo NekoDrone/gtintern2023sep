@@ -8,7 +8,7 @@ async function main(): Promise<void> {
     const staffDb: IStaffDb = loadStaffDatabase();
     const redemptionDb: IRedemptionDb = loadRedemptionDb();
     const userId: string = await readFromInput();
-    const userTeam = getUserTeamFromDatabase(userId, staffDb);
+    const userTeam: TeamNames = getUserTeamFromDatabase(userId, staffDb) as TeamNames;
 
     if (redemptionDb.teamExistsInDb(userTeam)) {
         // if(redemptionDb.getEntry(userTeam)?.team_name != userTeam)
@@ -25,7 +25,7 @@ function loadRedemptionDb(): IRedemptionDb {
     throw new Error("Function not implemented"); // TODO:
 }
 
-function getUserTeamFromDatabase(userId: string, database: IStaffDb): TeamNames {
+function getUserTeamFromDatabase(userId: string, database: IStaffDb): string {
     return database.getEntryByPassId(userId)?.teamName as string;
 }
 
