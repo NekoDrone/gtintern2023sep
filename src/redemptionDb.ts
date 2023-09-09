@@ -1,15 +1,10 @@
 import { type TeamNames } from "./staffDb";
 import * as fs from "fs";
 
-export class RedemptionDbEntry {
+export interface RedemptionDbEntry {
     teamName: TeamNames;
     redeemedBy: string;
     redeemedAt: number;
-    constructor(teamName: TeamNames, redeemedBy: string) {
-        this.teamName = teamName;
-        this.redeemedBy = redeemedBy;
-        this.redeemedAt = new Date().getTime();
-    }
 }
 
 export interface IRedemptionDb {
@@ -32,7 +27,7 @@ export class RedemptionDb implements IRedemptionDb {
         } catch (err) {
             console.log("Something went wrong while reading from file:" + err);
         }
-        // TODO: implement
+        this.database = this._csvToArray(fileData);
     }
 
     _csvToArray(csvData: string): RedemptionDbEntry[] {

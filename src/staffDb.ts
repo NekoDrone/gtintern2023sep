@@ -1,3 +1,5 @@
+import * as fs from "fs";
+
 export interface StaffDbEntry {
     staffPassId: string;
     teamName: TeamNames;
@@ -5,17 +7,51 @@ export interface StaffDbEntry {
 }
 
 export interface IStaffDb {
+    loadFrom: (filePath: string) => void;
     getEntryByPassId: (identifier: string) => StaffDbEntry | undefined;
+    close: () => void;
 }
 
 export class StaffDb implements IStaffDb {
     database: StaffDbEntry[];
+    filePath: string;
+
+    loadFrom(filePath: string): void {
+        this.filePath = filePath;
+        let fileData: string = "";
+        try {
+            fileData = fs.readFileSync(this.filePath, "utf-8");
+        } catch (err) {
+            console.log("Something went wrong while reading from file:" + err);
+        }
+        this.database = this._csvToArray(fileData);
+    }
+
+    _csvToArray(csvData: string): StaffDbEntry[] {
+        const data: string[] = csvData.split("\n");
+        const arr: StaffDbEntry[] = [];
+        for (const entry of data) {
+            const fields: string[] = entry.split(",");
+            for (const field of fields) {
+                const staffPassId = field[0];
+                const teamName = field[1] as TeamNames;
+                const createdAt = Number.parseInt(field[2]);
+                const dbEntry: StaffDbEntry = {
+                    staffPassId,
+                    teamName,
+                    createdAt,
+                };
+                arr.push(dbEntry);
+            }
+        }
+        return arr;
+    }
 
     getEntryByPassId(identifier: string): StaffDbEntry | undefined {
         return this.database.find((entry) => entry.staffPassId === identifier);
     }
 
-    // TODO: add necessary query stuff. See redemptionDb.ts for more info
+    close(): void {}
 }
 
 export enum TeamNames {
