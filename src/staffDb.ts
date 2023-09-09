@@ -32,17 +32,15 @@ export class StaffDb implements IStaffDb {
         const arr: StaffDbEntry[] = [];
         for (const entry of data) {
             const fields: string[] = entry.split(",");
-            for (const field of fields) {
-                const staffPassId = field[0];
-                const teamName = field[1] as TeamNames;
-                const createdAt = Number.parseInt(field[2]);
-                const dbEntry: StaffDbEntry = {
-                    staffPassId,
-                    teamName,
-                    createdAt,
-                };
-                arr.push(dbEntry);
-            }
+            const staffPassId = fields[0];
+            const teamName = fields[1] as TeamNames;
+            const createdAt = Number.parseInt(fields[2]);
+            const dbEntry: StaffDbEntry = {
+                staffPassId,
+                teamName,
+                createdAt,
+            };
+            arr.push(dbEntry);
         }
         return arr;
     }
@@ -61,4 +59,5 @@ export enum TeamNames {
     HUFFLEPUFF = "HUFFLEPUFF",
     RAVENCLAW = "RAVENCLAW",
     SLYTHERIN = "SLYTHERIN",
+    TEST = "TEST",
 }
