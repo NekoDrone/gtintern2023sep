@@ -3,7 +3,10 @@
         "outDir": "dist",
         "target": "es2021",
         "module": "CommonJS",
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "isolatedModules": true
     },
     "include": ["src/**/*"],
     "exclude": ["tests/**/*"]

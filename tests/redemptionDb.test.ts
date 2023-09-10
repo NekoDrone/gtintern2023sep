@@ -1,6 +1,6 @@
 import { RedemptionDb, type RedemptionDbEntry } from "../src/redemptionDb";
 import { TeamNames } from "../src/staffDb";
-import { loadRedemptionDb } from "../src/index";
+import path from "path";
 
 test("New Redemption Entry is created correctly.", () => {
     const redemptionDb = new RedemptionDb();
@@ -13,4 +13,13 @@ test("New Redemption Entry is created correctly.", () => {
     expect(actualEntry).toEqual(expectedEntry);
 });
 
-test;
+test("Test redemption data loads correctly.", () => {
+    const actualDb = new RedemptionDb();
+    actualDb.loadFrom(path.join(__dirname, "../data/testRedemption.csv"));
+    const expectedDb = new RedemptionDb();
+    const expectedEntries: RedemptionDbEntry[] = [
+        {
+            teamName: "TEAM",
+        },
+    ];
+});
