@@ -1,10 +1,12 @@
 # Take-Home Assignment
 
-Author: Sylfr Serenity Tan
+Author: Sylfr Serenity Tan Yi Qing
 
 Frameworks and Libraries: Node.js, Typescript, Babel, Jest.
 
 Linters/Formatters: ESLint, Prettier.
+
+Test Coverage (Reported by Jest): 72%
 
 ## Requirements
 
@@ -61,3 +63,15 @@ Finally, this would mean that so long as we maintain the interface's requirement
 Most edits from here on out would be pretty simple, and each part of the system is modular.
 
 After all, this is why TypeScript should be used rather than vanilla JavaScript. Vanilla JS can perform the requirements as listed, but TypeScript's type safety affords this extensibility, and I think this approach showcases what TypeScript is good at, rather than focusing on any particular implementation.
+
+## Additional Considerations
+
+### Why two interfaces for IStaffDb and IRedemptionDb? Why not one?
+
+Yes, they share most methods, and there is an argument to have one base interface (e.g. IDatabase) and then implementing that interface in both StaffDb and RedemptionDb classes.
+
+However, I believe that this would result in too tight of coupling. StaffDb and RedemptionDb ultimately have separate responsibilities, and if IDatabase changed due to a change in requirements for StaffDb, RedemptionDb would then need to change to fit the interface, which is not ideal.
+
+### Why Babel?
+
+Simply to ensure maximum compatibility in case the project is run on older versions of Node or ES.
