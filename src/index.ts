@@ -36,6 +36,7 @@ export function loadStaffDatabase(): IStaffDb {
 async function readFromInput(): Promise<string> {
     const inputInterface = readline.createInterface(process.stdin, process.stdout);
     const input = await inputInterface.question("Please key in staff ID:");
+
     return input;
 }
 
