@@ -6,12 +6,15 @@ import * as path from "path";
 // void main();
 
 export async function main(): Promise<void> {
+    console.log("\n\n\n\n\n"); // maybe implement popup? idk
     const redemptionDb: IRedemptionDb = loadRedemptionDb();
     const staffDb: IStaffDb = loadStaffDatabase();
     const userId: string = await readFromInput();
     const userTeam: TeamNames = getTeamFromStaffDb(userId, staffDb) as TeamNames;
 
-    if (redemptionDb.teamHasNotRedeemed(userTeam)) {
+    if (userTeam == undefined) {
+        console.log("Provided staff does not exist. Please try again.");
+    } else if (redemptionDb.teamHasNotRedeemed(userTeam)) {
         redemptionDb.redeemForTeamByUser(userTeam, userId);
         console.log(`Team ${userTeam}'s gifts have been redeemed by ${userId}`);
     } else {
@@ -33,7 +36,6 @@ export function loadRedemptionDb(): IRedemptionDb {
 
 export function loadStaffDatabase(): IStaffDb {
     const filePath = path.join(__dirname, "/../data/staffData.csv");
-    console.log(filePath);
     const database = new StaffDb();
     database.loadFrom(filePath);
     return database;

@@ -27,7 +27,11 @@ export class RedemptionDb implements IRedemptionDb {
         try {
             fileData = fs.readFileSync(this.filePath, "utf-8");
         } catch (err) {
-            console.log("Something went wrong while reading from file:" + err);
+            if (err.code == "ENOENT") {
+                console.log("Redemption data not found. Creating blank file.");
+            } else {
+                console.log("Something went wrong while reading from file: " + err);
+            }
         }
         this.database = this._csvToArray(fileData);
     }
