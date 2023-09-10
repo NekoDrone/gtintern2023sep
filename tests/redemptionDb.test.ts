@@ -19,7 +19,12 @@ test("Test redemption data loads correctly.", () => {
     const expectedDb = new RedemptionDb();
     const expectedEntries: RedemptionDbEntry[] = [
         {
-            teamName: "TEAM",
+            teamName: TeamNames.TEST,
+            redeemedBy: "TEST_STAFF",
+            redeemedAt: 1694259357747,
         },
     ];
+    expectedDb.database = expectedEntries;
+    expectedDb.filePath = path.join(__dirname, "../data/testRedemption.csv");
+    expect(actualDb).toEqual(expectedDb);
 });

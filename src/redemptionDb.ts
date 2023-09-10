@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 import { type TeamNames } from "./staffDb";
 import * as fs from "fs";
 
@@ -11,7 +12,7 @@ export interface IRedemptionDb {
     loadFrom: (filePath: string) => void;
     teamHasNotRedeemed: (identifier: TeamNames) => boolean;
     getEntryByTeam: (identifier: string) => RedemptionDbEntry | undefined;
-    redeemForTeamByUser: (userTeam: TeamNames, userId) => void;
+    redeemForTeamByUser: (userTeam: TeamNames, userId: string) => void;
     addEntry: (entry: RedemptionDbEntry) => void;
     close: () => void;
 }
@@ -32,7 +33,8 @@ export class RedemptionDb implements IRedemptionDb {
     }
 
     _csvToArray(csvData: string): RedemptionDbEntry[] {
-        const data: string[] = csvData.split("\n");
+        const data = csvData.split("\n");
+        data.shift();
         const arr: RedemptionDbEntry[] = [];
         for (const entry of data) {
             const fields: string[] = entry.split(",");
@@ -44,17 +46,20 @@ export class RedemptionDb implements IRedemptionDb {
                 redeemedBy,
                 redeemedAt,
             };
+            console.log(dbEntry);
             arr.push(dbEntry);
         }
         return arr;
     }
 
-    getEntryByTeam(identifier: string): RedemptionDbEntry | undefined {
-        return this.database.find((entry) => entry.teamName == identifier);
+    teamHasNotRedeemed(identifier: TeamNames): boolean {
+        const status = this.getEntryByTeam(identifier)?.teamName != identifier;
+        console.log(`Team has redeemed? ${!status}`);
+        return status;
     }
 
-    teamHasNotRedeemed(identifier: TeamNames): boolean {
-        return this.getEntryByTeam(identifier)?.teamName != identifier;
+    getEntryByTeam(identifier: string): RedemptionDbEntry | undefined {
+        return this.database.find((entry) => entry.teamName == identifier);
     }
 
     redeemForTeamByUser(userTeam: TeamNames, userId: any): void {
@@ -82,6 +87,7 @@ export class RedemptionDb implements IRedemptionDb {
             result += entry.redeemedBy + ",";
             result += entry.redeemedAt + "\n";
         }
+        result = result.slice(0, result.length - 1);
         return result;
     }
 

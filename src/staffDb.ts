@@ -49,7 +49,9 @@ export class StaffDb implements IStaffDb {
         return this.database.find((entry) => entry.staffPassId === identifier);
     }
 
-    close(): void {}
+    close(): void {
+        // method does nothing for now. If we swap to an actual database, we should close the reference properly here.
+    }
 }
 
 export enum TeamNames {
