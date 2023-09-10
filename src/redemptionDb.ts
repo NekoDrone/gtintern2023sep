@@ -46,7 +46,6 @@ export class RedemptionDb implements IRedemptionDb {
                 redeemedBy,
                 redeemedAt,
             };
-            console.log(dbEntry);
             arr.push(dbEntry);
         }
         return arr;

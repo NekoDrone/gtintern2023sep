@@ -10,8 +10,14 @@ export async function main(): Promise<void> {
     const staffDb: IStaffDb = loadStaffDatabase();
     const userId: string = await readFromInput();
     const userTeam: TeamNames = getTeamFromStaffDb(userId, staffDb) as TeamNames;
+
     if (redemptionDb.teamHasNotRedeemed(userTeam)) {
         redemptionDb.redeemForTeamByUser(userTeam, userId);
+        console.log(`Team ${userTeam}'s gifts have been redeemed by ${userId}`);
+    } else {
+        console.log(
+            `Team ${userTeam}'s gift has already been redeemed. Please do not give the gift.`,
+        );
     }
 
     staffDb.close();
