@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
-        "build": "tsc && babel src -d dist --extensions '.ts' ",
+        "build": "tsc && babel src -d dist --extensions .ts ",
         "start": "npm run build && node ./dist/program.js",
         "test-coverage": "jest --coverage"
     },
